@@ -2,7 +2,7 @@
 /*jslint browser: true, nomen: true */
 window.$ = window.$ || function (sel) { "use strict"; return document.querySelector(sel); };
 window.$$ = window.$$ || function (sel) { "use strict"; return document.querySelectorAll(sel); };
-var ColourPicker = (function ($, $$) {
+var colourPicker = (function ($, $$) {
 	"use strict";
 	var ranges = [],
 		numbers = [],
