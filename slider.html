@@ -1,0 +1,41 @@
+<style>
+	#colourRect {
+		width: 50px;
+		height: 50px;
+		border: 1px solid black;
+	}
+</style>
+<script>
+	window.addEventListener('load', function () {
+		"use strict";
+		var sliders, ranges, updateColour;
+
+		sliders = document.querySelectorAll('input[type="range"]');
+		Array.prototype.forEach.call(sliders, function (i) {
+			i.addEventListener("change", function (ev) {
+				document.querySelector('#' + ev.target.id + 'Num').value = ev.target.value;
+				updateColour();
+			});
+		});
+
+		ranges = document.querySelectorAll('input[type="number"]');
+		Array.prototype.forEach.call(ranges, function (i) {
+			i.addEventListener("change", function (ev) {
+				document.querySelector('#' + ev.target.id.toString().replace('Num', '')).value = ev.target.value;
+				updateColour();
+			});
+		});
+
+		updateColour = function () {
+			document.querySelector('#colourRect').style.backgroundColor = "rgb(" + sliders[0].value + ", " + sliders[1].value + ", " + sliders[2].value + ")";
+		};
+
+		updateColour();
+	});
+</script>
+
+<fieldset><input type="range" min="0" max="255" step="1" id="red" value="0"><input type="number" min="0" max="255" step="1" id="redNum" value="0"></fieldset>
+<fieldset><input type="range" min="0" max="255" step="1" id="green" value="0"><input type="number" min="0" max="255" step="1" id="greenNum" value="0"></fieldset>
+<fieldset><input type="range" min="0" max="255" step="1" id="blue" value="0"><input type="number" min="0" max="255" step="1" id="blueNum" value="0"></fieldset>
+
+<div id="colourRect"></div>
