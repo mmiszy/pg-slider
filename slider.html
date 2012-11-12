@@ -6,36 +6,70 @@
 	}
 </style>
 <script>
-	window.addEventListener('load', function () {
-		"use strict";
-		var sliders, ranges, updateColour;
 
-		sliders = document.querySelectorAll('input[type="range"]');
-		Array.prototype.forEach.call(sliders, function (i) {
-			i.addEventListener("change", function (ev) {
-				document.querySelector('#' + ev.target.id + 'Num').value = ev.target.value;
-				updateColour();
-			});
-		});
+	var ColourPicker = (function () {
+		var ranges = [], numbers = [];
+		var C = {
+			init: function () {
+				var colours = ['red', 'green', 'blue'];
+				for(i in colours) {
+					var range, number;
 
-		ranges = document.querySelectorAll('input[type="number"]');
-		Array.prototype.forEach.call(ranges, function (i) {
-			i.addEventListener("change", function (ev) {
-				document.querySelector('#' + ev.target.id.toString().replace('Num', '')).value = ev.target.value;
-				updateColour();
-			});
-		});
+					range = document.createElement('input');
+					range.id = colours[i];
+					range.step = 1;
+					range.min = 0;
+					range.max = 255;
+					range.type = "range";
+					ranges[i] = range;
 
-		updateColour = function () {
-			document.querySelector('#colourRect').style.backgroundColor = "rgb(" + sliders[0].value + ", " + sliders[1].value + ", " + sliders[2].value + ")";
+					number = document.createElement('input');
+					number.id = colours[i] + 'Num';
+					number.step = 1;
+					number.min = 0;
+					number.max = 255;
+					number.type = "number";
+					numbers[i] = number;
+
+					document.querySelector('body').appendChild(range);
+					document.querySelector('body').appendChild(number);
+				}
+			},
+
+			updateColour: function () {
+
+			}
 		};
 
-		updateColour();
-	});
+		return C;
+	}());
+
+	window.addEventListener('load', ColourPicker.init);
+
+	// window.addEventListener('load', function () {
+	// 	"use strict";
+	// 	var ranges, ranges, updateColour;
+
+	// 	ranges = document.querySelectorAll('input[type="range"]');
+	// 	Array.prototype.forEach.call(ranges, function (i) {
+	// 		i.addEventListener("change", function (ev) {
+	// 			document.querySelector('#' + ev.target.id + 'Num').value = ev.target.value;
+	// 			updateColour();
+	// 		});
+	// 	});
+
+	// 	ranges = document.querySelectorAll('input[type="number"]');
+	// 	Array.prototype.forEach.call(ranges, function (i) {
+	// 		i.addEventListener("change", function (ev) {
+	// 			document.querySelector('#' + ev.target.id.toString().replace('Num', '')).value = ev.target.value;
+	// 			updateColour();
+	// 		});
+	// 	});
+
+	// 	updateColour = function () {
+	// 		document.querySelector('#colourRect').style.backgroundColor = "rgb(" + ranges[0].value + ", " + ranges[1].value + ", " + ranges[2].value + ")";
+	// 	};
+
+	// 	updateColour();
+	// });
 </script>
-
-<fieldset><input type="range" min="0" max="255" step="1" id="red" value="0"><input type="number" min="0" max="255" step="1" id="redNum" value="0"></fieldset>
-<fieldset><input type="range" min="0" max="255" step="1" id="green" value="0"><input type="number" min="0" max="255" step="1" id="greenNum" value="0"></fieldset>
-<fieldset><input type="range" min="0" max="255" step="1" id="blue" value="0"><input type="number" min="0" max="255" step="1" id="blueNum" value="0"></fieldset>
-
-<div id="colourRect"></div>
