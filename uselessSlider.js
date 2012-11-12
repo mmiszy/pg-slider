@@ -49,9 +49,17 @@ var colourPicker = (function ($, $$) {
 
 			window.addEventListener("load", function () {
 				var i,
-					bindEvents;
+					bindEvents,
+					storedColours;
+
+				storedColours = (
+					(window.localStorage &&
+					window.localStorage.getItem('storedColours') &&
+					JSON.parse(window.localStorage.getItem('storedColours')) ) ||
+					{}
+				);
 				// add elements and bindings
-				bindEvents = function (r, n) {
+				bindEvents = function (c, r, n) {
 					r.addEventListener('change', function (ev) {
 						n.value = r.value;
 						C.updateColour();
@@ -61,13 +69,18 @@ var colourPicker = (function ($, $$) {
 						C.updateColour();
 					});
 
+					if (storedColours[c]) {
+						r.value = storedColours[c];
+						n.value = storedColours[c];
+					}
+
 					$('body').appendChild(r);
 					$('body').appendChild(n);
 				};
 
 				for (i in colours) {
 					if (colours.hasOwnProperty(i)) {
-						bindEvents(ranges[i], numbers[i]);
+						bindEvents(colours[i], ranges[i], numbers[i]);
 					}
 				}
 
@@ -81,6 +94,13 @@ var colourPicker = (function ($, $$) {
 			var rgb = 'rgb(' + ranges[0].value + ', ' + ranges[1].value + ', ' + ranges[2].value + ')';
 			colourRect.getContext("2d").fillStyle = rgb;
 			colourRect.getContext("2d").fillRect(0, 0, colourRect.width, colourRect.height);
+			if (window.localStorage) {
+				window.localStorage.setItem('storedColours', JSON.stringify({
+					red: ranges[0].value,
+					green: ranges[1].value,
+					blue: ranges[2].value
+				}));
+			}
 		}
 	};
 
