@@ -43,7 +43,7 @@ var colourPicker = (function ($, $$) {
 				}
 			}
 
-			colourRect = document.createElement('div');
+			colourRect = document.createElement('canvas');
 			colourRect.style.width = colourRect.style.height = "50px";
 			colourRect.style.border = "1px solid black";
 
@@ -79,7 +79,8 @@ var colourPicker = (function ($, $$) {
 
 		updateColour: function () {
 			var rgb = 'rgb(' + ranges[0].value + ', ' + ranges[1].value + ', ' + ranges[2].value + ')';
-			colourRect.style.backgroundColor = rgb;
+			colourRect.getContext("2d").fillStyle = rgb;
+			colourRect.getContext("2d").fillRect(0, 0, colourRect.width, colourRect.height);
 		}
 	};
 
