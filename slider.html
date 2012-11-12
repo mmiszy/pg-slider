@@ -6,13 +6,23 @@
 	}
 </style>
 <script>
-
+	window.$ = window.$ || function (sel) { return document.querySelector(sel); };
+	window.$$ = window.$$ || function (sel) { return document.querySelectorAll(sel); };
 	var ColourPicker = (function () {
-		var ranges = [], numbers = [];
+		"use strict";
+		var ranges = [],
+			numbers = [],
+			colourRect,
+			init = false;
 		var C = {
 			init: function () {
+				if (init) {
+					return;
+				}
+				init = true;
+
 				var colours = ['red', 'green', 'blue'];
-				for(i in colours) {
+				for(var i in colours) {
 					var range, number;
 
 					range = document.createElement('input');
@@ -20,6 +30,7 @@
 					range.step = 1;
 					range.min = 0;
 					range.max = 255;
+					range.value = 0;
 					range.type = "range";
 					ranges[i] = range;
 
@@ -28,48 +39,47 @@
 					number.step = 1;
 					number.min = 0;
 					number.max = 255;
+					number.value = 0;
 					number.type = "number";
 					numbers[i] = number;
-
-					document.querySelector('body').appendChild(range);
-					document.querySelector('body').appendChild(number);
 				}
+
+				colourRect = document.createElement('div');
+				colourRect.style.width = colourRect.style.height = "50px";
+				colourRect.style.border = "1px solid black";
+
+				window.addEventListener("load", function () {
+					// add elements and bindings
+					for (var i in colours) {
+						(function (r, n) {
+							r.addEventListener('change', function (ev) {
+								n.value = r.value;
+								C.updateColour();
+							});
+							n.addEventListener('change', function (ev) {
+								r.value = n.value;
+								C.updateColour();
+							});
+
+							$('body').appendChild(r);
+							$('body').appendChild(n);
+						}(ranges[i], numbers[i]));
+					}
+
+					$('body').appendChild(colourRect);
+
+					C.updateColour();
+				});
 			},
 
 			updateColour: function () {
-
+				var rgb = 'rgb(' + ranges[0].value + ', ' + ranges[1].value + ', ' + ranges[2].value + ')';
+				colourRect.style.backgroundColor = rgb;
 			}
 		};
 
 		return C;
 	}());
 
-	window.addEventListener('load', ColourPicker.init);
-
-	// window.addEventListener('load', function () {
-	// 	"use strict";
-	// 	var ranges, ranges, updateColour;
-
-	// 	ranges = document.querySelectorAll('input[type="range"]');
-	// 	Array.prototype.forEach.call(ranges, function (i) {
-	// 		i.addEventListener("change", function (ev) {
-	// 			document.querySelector('#' + ev.target.id + 'Num').value = ev.target.value;
-	// 			updateColour();
-	// 		});
-	// 	});
-
-	// 	ranges = document.querySelectorAll('input[type="number"]');
-	// 	Array.prototype.forEach.call(ranges, function (i) {
-	// 		i.addEventListener("change", function (ev) {
-	// 			document.querySelector('#' + ev.target.id.toString().replace('Num', '')).value = ev.target.value;
-	// 			updateColour();
-	// 		});
-	// 	});
-
-	// 	updateColour = function () {
-	// 		document.querySelector('#colourRect').style.backgroundColor = "rgb(" + ranges[0].value + ", " + ranges[1].value + ", " + ranges[2].value + ")";
-	// 	};
-
-	// 	updateColour();
-	// });
+	ColourPicker.init();
 </script>
